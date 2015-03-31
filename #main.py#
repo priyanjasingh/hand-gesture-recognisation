@@ -6,15 +6,15 @@ import time
 def differ(im_mi,im_im):
     total=0
     sqs=0    
-    im_img = np.asarray(im_mi)
-    im_mid = np.asarray(im_im)
     for x in range(480):
         for y in range(640):
-            k = int(im_img[x,y])-int(im_mid[x,y])
-            if (k > 30): im_mid[x,y]=255;
-            elif (k < -30): im_mid[x,y]=0;
-            else: im_mid[x,y]=127;
-    iplImage =opencv.adaptors.NumPy2Ipl(im_mid)
+            im_img = np.asarray(im_mi)
+            im_mid = np.asarray(im_mi)
+            k = im_img[x][y]-im_mid[x][y];
+            if (k > 30): im_mid[x][y]=255;
+            elif (k < -30): im_mid[x][y]=0;
+            else: im_mid[x][y]=127;
+    iplImage = opencv.adaptors.NumPy(im_mid)
     return iplImage
 
 def horize(origin,modif):
@@ -35,6 +35,12 @@ def horize(origin,modif):
                             nemptr[y][x]=ptr[y][x]
                             x=x+3
                     nemptr[y][x]=127
+
+def verize(origin,modif):
+    for x in range(3*640):
+        for y in range(480):
+            
+        
 
 def main():
     cv.NamedWindow("camera", 1)

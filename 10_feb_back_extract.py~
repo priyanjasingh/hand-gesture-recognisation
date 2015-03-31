@@ -1,0 +1,48 @@
+import numpy as np
+import cv2
+import cv2.cv as cv
+
+cap = cv2.VideoCapture(0)
+
+fgbg = cv2.BackgroundSubtractorMOG(500, 6, 0.9, .1)
+no_frame=10
+ret, frame = cap.read()
+res = cv.CreateMat(480, 640, cv.CV_8U)
+
+while(1):
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #img = cv2.medianBlur(gray,5)
+    #th3 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+   
+    if no_frame>0:
+        fgmask = fgbg.apply(frame)
+        cv2.imshow('frame',fgmask)
+        
+        no_frame-=1
+    else:
+        cv2.imshow('frame',fgmask)
+        cv2.imshow('framx',frame)
+        #cv2.imshow('frx',th3)
+   
+    fg = fgbg.apply(frame)
+    img_1 =cv.fromarray(fg)
+    
+    img_2 =cv.fromarray(fgmask)
+    cv.AbsDiff(img_1, img_2 , res)
+    cv.ShowImage('subtracted',res)
+    
+    '''
+    im_img = cv.CreateMat(frame.shape(1), frame.shape(0), cv.CV_8U)
+    cv.CvtColor(frame, im_img, cv.CV_RGB2GRAY)
+    
+    im_mask = cv.CreateMat(fgmask.height, fgmask.width, cv.CV_8U)
+    cv.CvtColor(fgmask, im_mask, cv.CV_RGB2GRAY)
+    '''
+   
+    k = cv2.waitKey(30) & 0xff
+    if k == 27:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
